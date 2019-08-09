@@ -49,6 +49,7 @@ if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
     $second_wrong = $questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]['secondIncorrectAnswer'];
     $first_adder = $questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]['leftAdder'];
     $second_adder = $questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]['rightAdder'];
+    $oper_to_print = $questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]['operator'];
 }
 ?>
 
@@ -68,7 +69,7 @@ if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
     <!-- <?php if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
                 echo "Answer: " . $answer;
             } ?> -->
-    <!-- <?php var_dump($questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]); ?> -->
+    <!-- <?php var_dump($rand_props); ?> -->
     <div class="container">
         <div id="quiz-box">
             <?php if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
@@ -77,7 +78,7 @@ if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
             } ?>
 
             <?php if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
-                echo   '<p class="quiz">What is ' .  $first_adder . ' + ' . $second_adder . '?</p>';
+                echo   '<p class="quiz">What is ' .  $first_adder . ' ' . $oper_to_print . ' ' . $second_adder . '?</p>';
             } ?>
             <form action="index.php" method="POST">
                 <?php
@@ -112,8 +113,13 @@ if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
             echo "Total correct: " . $_SESSION['correctos'];
             echo "</br></br>Total wrong: " . $_SESSION['wrongos'];
             ?>
+            <?php if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
+                echo "<div>";
+                echo '<input type="button" onclick="toggleFunc()" class="btn" id="answer_button" name="show_ans" value="Show Answer?" /><p style="display:none" id="answer_p" >Answer: ' . $answer . '</p></div>';
+            } ?>
         </div>
     </div>
+    <script src="inc/answer.js"></script>
 </body>
 
 </html>
