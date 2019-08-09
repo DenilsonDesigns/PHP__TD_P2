@@ -3,9 +3,9 @@ session_start();
 include("inc/questions.php");
 include("inc/quiz.php");
 
-$random_number_array = range(0, 9);
-shuffle($random_number_array);
-$random_number_array = array_slice($random_number_array, 0, 10);
+// $random_number_array = range(0, 9);
+// shuffle($random_number_array);
+// $random_number_array = array_slice($random_number_array, 0, 10);
 
 
 $_SESSION['total_qs'] = count($questions);
@@ -17,7 +17,6 @@ if (!isset($_SESSION['question_no'])) {
 if (isset($_POST['refresh'])) {
     $_SESSION['question_no'] = 1;
 }
-
 
 if (!isset($_POST['correct']) && !isset($_POST['wrong'])) {
     $_SESSION['correctos'] = 0;
@@ -34,13 +33,22 @@ if (isset($_POST['wrong'])) {
     $_SESSION['wrongos']++;
 }
 
-if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
+if ($_SESSION['question_no'] == 1) {
+    $random_number_array = range(0, 9);
+    shuffle($random_number_array);
+    $random_number_array = array_slice($random_number_array, 0, 10);
+    $_SESSION['ran_num'] = $random_number_array;
+}
 
-    $answer = $questions[$random_number_array[$_SESSION['question_no'] - 1]]['correctAnswer'];
-    $first_wrong = $questions[$random_number_array[$_SESSION['question_no'] - 1]]['firstIncorrectAnswer'];
-    $second_wrong = $questions[$random_number_array[$_SESSION['question_no'] - 1]]['secondIncorrectAnswer'];
-    $first_adder = $questions[$random_number_array[$_SESSION['question_no'] - 1]]['leftAdder'];
-    $second_adder = $questions[$random_number_array[$_SESSION['question_no'] - 1]]['rightAdder'];
+if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
+    // var_dump($_SESSION['ran_num'][$_SESSION['question_no'] - 1]);
+    // echo "question no: " . $_SESSION['question_no'];
+    // var_dump($_SESSION['ran_num']);
+    $answer = $questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]['correctAnswer'];
+    $first_wrong = $questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]['firstIncorrectAnswer'];
+    $second_wrong = $questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]['secondIncorrectAnswer'];
+    $first_adder = $questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]['leftAdder'];
+    $second_adder = $questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]['rightAdder'];
 }
 ?>
 
@@ -60,7 +68,7 @@ if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
     <!-- <?php if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
                 echo "Answer: " . $answer;
             } ?> -->
-    <!-- <?php var_dump($questions[$random_number_array[$_SESSION['question_no'] - 1]]); ?> -->
+    <!-- <?php var_dump($questions[$_SESSION['ran_num'][$_SESSION['question_no'] - 1]]); ?> -->
     <div class="container">
         <div id="quiz-box">
             <?php if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
