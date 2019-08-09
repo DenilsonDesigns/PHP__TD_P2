@@ -3,6 +3,11 @@ session_start();
 include("inc/questions.php");
 include("inc/quiz.php");
 
+$random_number_array = range(0, 9);
+shuffle($random_number_array);
+$random_number_array = array_slice($random_number_array, 0, 10);
+
+
 $_SESSION['total_qs'] = count($questions);
 
 if (!isset($_SESSION['question_no'])) {
@@ -12,6 +17,7 @@ if (!isset($_SESSION['question_no'])) {
 if (isset($_POST['refresh'])) {
     $_SESSION['question_no'] = 1;
 }
+
 
 if (!isset($_POST['correct']) && !isset($_POST['wrong'])) {
     $_SESSION['correctos'] = 0;
@@ -30,11 +36,11 @@ if (isset($_POST['wrong'])) {
 
 if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
 
-    $answer = $questions[$_SESSION['question_no'] - 1]['correctAnswer'];
-    $first_wrong = $questions[$_SESSION['question_no'] - 1]['firstIncorrectAnswer'];
-    $second_wrong = $questions[$_SESSION['question_no'] - 1]['secondIncorrectAnswer'];
-    $first_adder = $questions[$_SESSION['question_no'] - 1]['leftAdder'];
-    $second_adder = $questions[$_SESSION['question_no'] - 1]['rightAdder'];
+    $answer = $questions[$random_number_array[$_SESSION['question_no'] - 1]]['correctAnswer'];
+    $first_wrong = $questions[$random_number_array[$_SESSION['question_no'] - 1]]['firstIncorrectAnswer'];
+    $second_wrong = $questions[$random_number_array[$_SESSION['question_no'] - 1]]['secondIncorrectAnswer'];
+    $first_adder = $questions[$random_number_array[$_SESSION['question_no'] - 1]]['leftAdder'];
+    $second_adder = $questions[$random_number_array[$_SESSION['question_no'] - 1]]['rightAdder'];
 }
 ?>
 
@@ -51,9 +57,10 @@ if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
 
 <body>
     <!-- <?php echo "Session q no: " . $_SESSION['question_no']; ?> -->
-    <?php if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
-        echo "Answer: " . $answer;
-    } ?>
+    <!-- <?php if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
+                echo "Answer: " . $answer;
+            } ?> -->
+    <!-- <?php var_dump($questions[$random_number_array[$_SESSION['question_no'] - 1]]); ?> -->
     <div class="container">
         <div id="quiz-box">
             <?php if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
@@ -62,15 +69,24 @@ if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
             } ?>
 
             <?php if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
-                echo   '<p class="quiz">What is <?php echo $first_adder; ?> + <?php echo $second_adder; ?>?</p>';
+                echo   '<p class="quiz">What is ' .  $first_adder . ' + ' . $second_adder . '?</p>';
             } ?>
             <form action="index.php" method="POST">
                 <?php
                 if ($_SESSION['question_no'] < $_SESSION['total_qs'] + 1) {
-                    echo '<input type="hidden" name="id" value="0" />
-                    <input type="submit" class="btn" name="wrong" value="' . $first_wrong . '" />
-                    <input type="submit" class="btn" name="correct" value="' . $answer . '" />
-                    <input type="submit" class="btn" name="wrong" value="' . $second_wrong . '" />';
+                    $echo_array = array(
+                        '<input type="submit" class="btn" name="wrong" value="' . $first_wrong . '" />',
+                        '<input type="submit" class="btn" name="correct" value="' . $answer . '" />',
+                        '<input type="submit" class="btn" name="wrong" value="' . $second_wrong . '" />'
+                    );
+                    //generate array of rand nums 0-2;
+                    $echo_ran = range(0, 2);
+                    shuffle($echo_ran);
+                    $echo_ran = array_slice($echo_ran, 0, 3);
+                    echo '<input type="hidden" name="id" value="0" />';
+                    foreach ($echo_ran as $val) {
+                        echo $echo_array[$val];
+                    }
                 } else {
                     echo '<p>Game Over!</p>';
                     echo '<p>Your score: ' . $_SESSION['correctos'] . '</p>';
